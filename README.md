@@ -1,5 +1,3 @@
-# ScientificText_Detection
-
 # Nuanced Multi-class Detection of Machine-Generated Scientific Text
 
 ## Overview
