@@ -4,11 +4,11 @@
 
 ## Overview
 
-This repo is for share datasets generated from paper: Nuanced Multi-class Detection of Machine-Generated Scientific Text
+This repository contains the dataset and model details for the paper titled "Nuanced Multi-class Detection of Machine-Generated Scientific Text." Our work focuses on detecting machine-generated scientific text across multiple domains, addressing not only binary classification but also the classification of practical usages of large language models (LLMs), such as paraphrasing, summarization, and title-based generation. We also introduce a novel baseline model that integrates contrastive learning to improve the model's ability to discern similar texts effectively.
 
 ## Dataset
 
-We provide access to our multi-domain dataset designed for nuanced detection of machine-generated scientific text. The dataset is divided into training, validation, and test sets.
+We provide a comprehensive dataset that is designed to aid in the nuanced detection of machine-generated scientific text. The dataset is divided into training, validation, and test sets, each labeled with one of four categories: generated, paraphrase, summarized, and human-written.
 
 ### Full Dataset
 [Full Dataset Link](https://drive.google.com/file/d/1_F7kpRdfPhfMp1gfbe14FaENUe0zSy6i/view?usp=share_link)
