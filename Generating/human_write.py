@@ -1,0 +1,106 @@
+import pandas as pd
+import json
+from tqdm import tqdm
+import openai
+import time
+
+openai.api_key = "YOUR_API_KEY"
+
+ori_context = "I will provide you with an abstract of a research paper. " \
+    + "Please paraphrase this abstract in one paragraph and in a formal and academic style. " \
+    + "The abstract is as follows:\n\n{} " 
+    
+df_combined = pd.DataFrame()
+corpus_abstracts = []
+chunk_size = 20000
+
+
+#Your input path
+file_template = 'YOUR_INPUT_PATH'
+#Your output path
+save_path = "YOUR_OUTPUT_PATH"
+
+max_rows = 20000
+processed_rows = 0  
+results = []
+instances_since_last_save = 0  
+save_interval = 10
+
+PBAR = tqdm(total=max_rows)
+
+def save_results_to_file(results, save_path, mode='a'):
+    """Save the current results to the file."""
+    with open(save_path, mode, encoding="utf-8") as f:
+        for ans in results:
+            f.write(json.dumps(ans) + "\n")
+    results.clear()  # Clear the results after saving
+
+
+file_path = file_template
+
+for chunk in pd.read_json(file_path, lines=True, chunksize=chunk_size):
+    for index, row in chunk.iterrows():
+        # if index not in [147,3560,4015,5534,6786]:
+        #     continue
+            
+        if processed_rows >= max_rows:
+            break
+        data = row.to_dict()
+        try:
+            corpusid = data["corpusid"]
+            category = data["category"]
+            abstract_info = data["content"]["annotations"]["abstract"]
+            abstract_info_list = json.loads(abstract_info)
+            if abstract_info_list:
+                abstract_info = abstract_info_list[0]
+                start_position = abstract_info["start"]
+                end_position = abstract_info["end"]
+                
+                
+                if not isinstance(start_position, int) or not isinstance(end_position, int):
+                    print(f"Skipping row {index} due to non-integer positions")
+                    continue
+                
+                abstract_text = data["content"]["text"][start_position:end_position]
+                if len(abstract_text) < 300:
+                    continue
+                
+                context = ori_context.format(abstract_text)
+                results.append({"index": index, "corpusid": corpusid, "generate mode": "human write", "generated text": abstract_text, "category": category})
+                
+                # try:
+                #     response = openai.ChatCompletion.create(
+                #         model="gpt-3.5-turbo",  # gpt-4
+                #         messages=[
+                #             {"role": "system", "content": "You are a helpful assistant."},
+                #             {"role": "user", "content": context}
+                #         ]
+                #     )
+                #     result = response['choices'][0]['message']['content']
+                #     results.append({"index": index, "corpusid": corpusid, "generate mode": "paraphrase", "generated text": result, "category": category})
+                # except Exception as e:
+                #     print(f"Error: {e}")
+
+                processed_rows += 1
+                instances_since_last_save += 1
+                PBAR.update(1)
+
+                
+                if instances_since_last_save >= save_interval:
+                    save_results_to_file(results, save_path)
+                    instances_since_last_save = 0  
+
+        except KeyError as e:
+            print(f"Missing data in row {index}: {e}")
+        except Exception as e:
+            print(f"Error processing row {index}: {e}")
+    if processed_rows >= max_rows:
+        break
+
+PBAR.close()
+
+# Save any remaining results
+if results:
+    save_results_to_file(results, save_path)
+
+print(f"Completed. Saved the results for {processed_rows} instances.")

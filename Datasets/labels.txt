@@ -1,0 +1,4 @@
+generated
+paraphrase
+summarized
+human write
