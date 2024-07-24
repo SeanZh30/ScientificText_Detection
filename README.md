@@ -56,7 +56,4 @@ If you use this dataset in your research, please cite our paper:
 
 ## Contact
 
-For any questions or issues related to the dataset, please contact:
-
-- **Yubin Ge**: [yubinge2@illinois.edu](yubinge2@illinois.edu)
-- **Shiyuan Zhang**: [sz54@illinois.edu](sz54@illinois.edu)
+For any questions or issues related to the dataset, please leave message in *issue*.
