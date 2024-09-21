@@ -41,15 +41,7 @@ To use the dataset, download the relevant files from the links provided above. T
 If you use this dataset in your research, please cite our paper:
 
 ```
-@article{yourpaper2024,
-  title={Nuanced Multi-class Detection of Machine-Generated Scientific Text},
-  author={Your Name and Co-authors},
-  journal={Journal Name},
-  year={2024},
-  volume={Volume},
-  pages={Page numbers},
-  publisher={Publisher}
-}
+Comming Soon
 ```
 
 ## Contact
